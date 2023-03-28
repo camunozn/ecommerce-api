@@ -18,7 +18,7 @@ exports.getAllUsers = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const updatedUser = await UserServices.update(id, req.body);
+    const updatedUser = await UserServices.updateOne(id, req.body);
     res.status(201).json({
       status: 'success',
       data: {

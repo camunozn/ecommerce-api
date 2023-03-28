@@ -1,68 +1,81 @@
-const { check, param } = require('express-validator');
+const { check, param, oneOf } = require('express-validator');
 const validateResult = require('../utils/validate');
 
-const createProductValidator = [
-  check('name', 'Error con el campo name')
+exports.createProduct = [
+  check('name', 'Error with name field')
     .exists()
-    .withMessage("Debe existir la propiedad 'name'")
+    .withMessage('Property name should exists')
     .notEmpty()
-    .withMessage('El campo name no debe estar vacio')
+    .withMessage('Property name cannot be empty')
     .isString()
-    .withMessage('El campo name debe ser un string')
+    .withMessage('Property name must be a string')
     .isLength({ min: 6, max: 30 })
-    .withMessage('El campo name debe tener entre 6 y 30 caracteres'),
-  check('description', 'Error con el campo description')
+    .withMessage('Property name must be between 6 and 30 characters long'),
+  check('description', 'Error with description field')
     .exists()
-    .withMessage("Debe existir la propiedad 'description'")
+    .withMessage('Property description should exists')
     .notEmpty()
-    .withMessage('El campo description no debe estar vacio')
+    .withMessage('Property description cannot be empty')
     .isString()
-    .withMessage('El campo description debe ser un string')
+    .withMessage('Property description must be a string')
     .isLength({ min: 6 })
-    .withMessage('El campo description debe tener minimo de 6 caracteres'),
-  check('price', 'Error con el campo price')
+    .withMessage('Property description must be at least 6 characters long'),
+  check('price', 'Error with price field')
     .exists()
-    .withMessage("Debe existir la propiedad 'price'")
+    .withMessage('Property price should exists')
     .notEmpty()
-    .withMessage('El campo price no debe estar vacio')
+    .withMessage('Property price cannot be empty')
     .isFloat()
-    .withMessage('El campo price debe ser un numero decimal'),
-  check('stock', 'error con el campor stock')
+    .withMessage('Property price must be a floating number'),
+  check('stock', 'Error with stock field')
     .exists()
-    .withMessage("Debe existir la propiedad 'stock'")
+    .withMessage('Property stock should exists')
     .notEmpty()
-    .withMessage('El campo stock no debe estar vacio')
+    .withMessage('Property stock cannot be empty')
     .isInt()
-    .withMessage('El campo stock debe ser un numero entero'),
-  check('product_image', 'Error con el campo product_image')
+    .withMessage('Property stock must be an integer'),
+  check('product_image', 'Error with product image field')
     .exists()
-    .withMessage("Debe existir la propiedad 'product_image'")
+    .withMessage('Property product image should exists')
     .notEmpty()
-    .withMessage('El campo product_image no debe estar vacio')
+    .withMessage('Property product image cannot be empty')
     .isURL()
-    .withMessage('El campo product_image debe ser una url valida'),
+    .withMessage('Property product image must be a valid URL'),
   (req, res, next) => {
     validateResult(req, res, next);
   },
 ];
 
-const updateProductValidator = [
-  param('id_product').isInt().withMessage('El id debe ser un numero entero'),
-  check('description', 'Error con el campo description')
-    .exists()
-    .withMessage("Debe existir la propiedad 'description'")
+exports.updateProduct = [
+  param('id').isInt().withMessage('Id field must be an integer'),
+
+  check('description', 'Error with description field')
+    .optional()
     .notEmpty()
-    .withMessage('El campo description no debe estar vacio')
+    .withMessage('Property description cannot be empty')
     .isString()
-    .withMessage('El campo description debe ser un string')
+    .withMessage('Property description must be a string')
     .isLength({ min: 6 })
-    .withMessage('El campo description debe tener minimo de 6 caracteres'),
+    .withMessage('Property description must be at least 6 characters long'),
+  check('price', 'Error with price field')
+    .optional()
+    .notEmpty()
+    .withMessage('Property price cannot be empty')
+    .isFloat()
+    .withMessage('Property price must be a floating number'),
+  check('stock', 'Error with stock field')
+    .optional()
+    .notEmpty()
+    .withMessage('Property stock cannot be empty')
+    .isInt()
+    .withMessage('Property stock must be an integer'),
+  check('product_image', 'Error with product image field')
+    .optional()
+    .notEmpty()
+    .withMessage('Property product image cannot be empty')
+    .isURL()
+    .withMessage('Property product image must be a valid URL'),
   (req, res, next) => {
     validateResult(req, res, next);
   },
 ];
-
-module.exports = {
-  createProductValidator,
-  updateProductValidator,
-};

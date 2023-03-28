@@ -3,39 +3,35 @@ const Users = require('../models/user.model');
 class UserServices {
   static async getAll() {
     try {
-      const users = await Users.findAll();
-      return users;
+      return await Users.findAll();
     } catch (error) {
       throw error;
     }
   }
 
-  static async getUserByEmail(email) {
+  static async getOneByEmail(email) {
     try {
-      const user = await Users.findOne({
+      return await Users.findOne({
         where: { email },
       });
-      return user;
     } catch (error) {
       throw error;
     }
   }
 
-  static async create(newUser) {
+  static async createOne(newUser) {
     try {
-      const createdUser = await Users.create(newUser);
-      return createdUser;
+      return await Users.create(newUser);
     } catch (error) {
       throw error;
     }
   }
 
-  static async update(id, data) {
+  static async updateOne(id, data) {
     try {
-      const updatedUser = await Users.update(data, {
+      return await Users.update(data, {
         where: { id },
       });
-      return updatedUser;
     } catch (error) {
       throw error;
     }

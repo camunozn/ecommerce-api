@@ -1,12 +1,12 @@
-const ProductsServices = require('../services/product.services');
+const ProductServices = require('../services/product.services');
 
-const getAllProducts = async (req, res, next) => {
-  const url = 'localhost:8000/api/v1/products';
-
+exports.getAllProducts = async (req, res, next) => {
+  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   try {
     const { offset, limit } = req.query;
-    const posts = await ProductsServices.getAll(offset, limit);
-    const { count, rows } = posts;
+
+    const products = await ProductServices.getAll(offset, limit);
+    const { count, rows } = products;
 
     const newOffset = isNext => {
       if (isNext) return Number(offset) + Number(limit);
@@ -27,58 +27,56 @@ const getAllProducts = async (req, res, next) => {
       count,
       next: nextPage,
       previous: previousPage,
-      posts: rows,
+      products: rows,
     };
 
-    res.json(!limit && !offset ? response.posts : response);
+    res.json(limit && offset ? response : response.products);
   } catch (error) {
     next(error);
   }
 };
 
-const createProduct = async (req, res, next) => {
+exports.createProduct = async (req, res, next) => {
   try {
     const { id } = req.user;
-    if (id != req.body.user_id) {
+    if (id !== req.body.user_id) {
       return next({
         status: 401,
         message: 'Unauthorized',
         errorName: 'user not logged in',
       });
     }
-    await ProductsServices.create(req.body);
+    const product = await ProductServices.createOne(req.body);
     res.status(201).json({
-      success: true,
+      status: 'success',
+      data: {
+        product,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
 
-const updateProduct = async (req, res, next) => {
+exports.updateProduct = async (req, res, next) => {
   try {
-    const { id_product } = req.params;
-    const { user_id } = await ProductsServices.getOne(id_product);
+    const { id } = req.params;
+    const { user_id } = await ProductServices.getOne(id);
 
     if (user_id != req.user.id) {
       return next({
         status: 401,
-        message: 'User not logged in. Process with login',
+        message: 'User not logged in.',
         errorName: 'Unauthorized',
       });
     }
 
-    await ProductsServices.update(req.body, id_product);
-    res.status(204).send({
-      success: true,
+    const updatedProduct = await ProductServices.updateOne(req.body, id);
+    res.status(200).json({
+      status: 'success',
+      data: null,
     });
   } catch (error) {
     next(error);
   }
-};
-
-module.exports = {
-  getAllProducts,
-  createProduct,
-  updateProduct,
 };

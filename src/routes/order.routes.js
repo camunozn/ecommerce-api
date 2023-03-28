@@ -1,11 +1,11 @@
 const { Router } = require('express');
 const { createOrder, getOrder } = require('../controllers/order.controller');
-const authenticate = require('../middlewares/auth.middleware');
+const authController = require('../controllers/auth.controller');
 
 const router = Router();
 
-router.post('/api/v1/order/:user', authenticate, createOrder);
+router.post('/api/v1/order/:user', authController.protect, createOrder);
 
-router.get('/api/v1/order', authenticate, getOrder);
+router.get('/api/v1/order', authController.protect, getOrder);
 
 module.exports = router;

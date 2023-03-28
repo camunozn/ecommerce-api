@@ -11,7 +11,7 @@ class ProductsServices {
         limit,
         include: {
           model: Users,
-          attributes: ['username', 'avatar'],
+          attributes: ['id', 'username'],
         },
       });
     } catch (error) {
@@ -27,7 +27,7 @@ class ProductsServices {
     }
   }
 
-  static async create(data) {
+  static async createOne(data) {
     try {
       return await Products.create(data);
     } catch (error) {
@@ -35,7 +35,7 @@ class ProductsServices {
     }
   }
 
-  static async update(data, id) {
+  static async updateOne(data, id) {
     try {
       return await Products.update(data, {
         where: { id },

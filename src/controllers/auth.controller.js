@@ -1,6 +1,7 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const UserServices = require('../services/user.services');
 const AuthServices = require('../services/auth.services');
-const bcrypt = require('bcrypt');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -9,7 +10,7 @@ exports.signUp = async (req, res, next) => {
       email: req.body.email,
       password: req.body.password,
     };
-    const user = await UserServices.create(newUser);
+    const user = await UserServices.createOne(newUser);
     // incluir envío de mail de confirmación
 
     const { id, username, email } = user;
@@ -31,7 +32,7 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await UserServices.getUserByEmail(email);
+    const user = await UserServices.getOneByEmail(email);
     if (!user)
       return next({
         status: 400,
@@ -60,6 +61,34 @@ exports.login = async (req, res, next) => {
         email,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.protect = (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    return next({
+      status: 401,
+      error: 'Unauthorized',
+      message: 'Not token provided',
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithms: process.env.JWT_ALGORITHM,
+    });
+    req.user = decoded;
+    next();
   } catch (error) {
     next(error);
   }

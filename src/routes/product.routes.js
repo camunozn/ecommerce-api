@@ -1,31 +1,25 @@
 const { Router } = require('express');
-const {
-  getAllProducts,
-  createProduct,
-  updateProduct,
-} = require('../controllers/product.controller');
-const {
-  createProductValidator,
-  updateProductValidator,
-} = require('../validators/product.validators');
-const authenticate = require('../middlewares/auth.middleware');
+const productController = require('../controllers/product.controller');
+const productValidator = require('../validators/product.validators');
+const authController = require('../controllers/auth.controller');
 
 const router = Router();
 
-router.get('/api/v1/products', getAllProducts);
+router
+  .route('/')
+  .get(productController.getAllProducts)
+  .post(
+    productValidator.createProduct,
+    authController.protect,
+    productController.createProduct
+  );
 
-router.post(
-  '/api/v1/products',
-  createProductValidator,
-  authenticate,
-  createProduct
-);
-
-router.put(
-  '/api/v1/products/:id_product',
-  updateProductValidator,
-  authenticate,
-  updateProduct
-);
+router
+  .route('/:id')
+  .put(
+    productValidator.updateProduct,
+    authController.protect,
+    productController.updateProduct
+  );
 
 module.exports = router;
