@@ -1,5 +1,5 @@
 const CartServices = require('../services/cart.services');
-const ProductsServices = require('../services/products.services');
+const ProductsServices = require('../services/product.services');
 
 const addToCart = async (req, res, next) => {
   try {

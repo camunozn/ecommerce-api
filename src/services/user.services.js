@@ -1,26 +1,16 @@
-const Users = require('../models/users.model');
+const Users = require('../models/user.model');
 
-class UsersServices {
-  static async create(newUser) {
+class UserServices {
+  static async getAll() {
     try {
-      const userCreated = await Users.create(newUser);
-      return userCreated;
+      const users = await Users.findAll();
+      return users;
     } catch (error) {
       throw error;
     }
   }
 
-  static async update(id, data) {
-    try {
-      return await Users.update(data, {
-        where: { id },
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async getUser(email) {
+  static async getUserByEmail(email) {
     try {
       const user = await Users.findOne({
         where: { email },
@@ -30,6 +20,26 @@ class UsersServices {
       throw error;
     }
   }
+
+  static async create(newUser) {
+    try {
+      const createdUser = await Users.create(newUser);
+      return createdUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async update(id, data) {
+    try {
+      const updatedUser = await Users.update(data, {
+        where: { id },
+      });
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
-module.exports = UsersServices;
+module.exports = UserServices;

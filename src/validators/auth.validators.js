@@ -1,32 +1,59 @@
 const { check, param } = require('express-validator');
 const validateResult = require('../utils/validate');
 
-const authValidator = [
-  check('email', 'Error con el correo electronico')
+exports.singUp = [
+  check('username', 'Error with username field')
     .exists()
-    .withMessage('No se encontro la propiedad email')
+    .withMessage('There is not an username property')
     .notEmpty()
-    .withMessage("No se encontro un valor para la propiedad 'email'")
+    .withMessage('Username cannot be empty')
     .isString()
-    .withMessage('la propiedad email debe ser un string')
-    .isLength({ min: 7, max: 50 })
-    .withMessage('EL correo debe tener una longitud entre 7 y 50 caracteres')
+    .withMessage('Username must be a string')
+    .isLength({ min: 6, max: 30 })
+    .withMessage('Username should be between 6 and 30 characters long'),
+  check('email', 'Error with email')
+    .exists()
+    .withMessage('There is not an email property')
+    .notEmpty()
+    .withMessage('There is no value for the email property')
+    .isString()
+    .withMessage('Email must be a string')
     .isEmail()
-    .withMessage('El correo no tiene un formato correcto'),
-  check('password', 'Error con la contraseña')
+    .withMessage('Email is not in an email format'),
+  check('password', 'Error with password')
     .exists()
-    .withMessage('No se encontro la propiedad password')
+    .withMessage('There is not a password property')
     .notEmpty()
-    .withMessage('No se encontro un valor para la propiedad password')
+    .withMessage('There is no value for the password property')
     .isString()
-    .withMessage('la propiedad password debe ser un string')
+    .withMessage('Password must be a string')
     .isLength({ min: 7 })
-    .withMessage('password debe tener una longitud minima de 7 caracteres'),
+    .withMessage('Password must be at least 7 characters long'),
   (req, res, next) => {
     validateResult(req, res, next);
   },
 ];
 
-module.exports = {
-  authValidator,
-};
+exports.login = [
+  check('email', 'Error with email')
+    .exists()
+    .withMessage('There is not an email property')
+    .notEmpty()
+    .withMessage('There is no value for the email property')
+    .isString()
+    .withMessage('Email must be an string')
+    .isEmail()
+    .withMessage('Email is not in an email format'),
+  check('password', 'Error with password')
+    .exists()
+    .withMessage('There is not a password property')
+    .notEmpty()
+    .withMessage('There is no value for the password property')
+    .isString()
+    .withMessage('Password must be a string')
+    .isLength({ min: 7 })
+    .withMessage('Password must be at least 7 characters long'),
+  (req, res, next) => {
+    validateResult(req, res, next);
+  },
+];

@@ -26,14 +26,13 @@ const Users = db.define(
     },
     avatar: {
       type: DataTypes.TEXT,
-      unique: true,
     },
   },
   {
     hooks: {
       beforeCreate: async user => {
         try {
-          const salt = await bcrypt.genSalt(10);
+          const salt = await bcrypt.genSalt(12);
           const passwordHash = await bcrypt.hash(user.password, salt);
           user.password = passwordHash;
         } catch (error) {
@@ -41,7 +40,6 @@ const Users = db.define(
         }
       },
     },
-    timestamps: false,
   }
 );
 

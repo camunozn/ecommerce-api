@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
-const Products = require('../models/products.model');
-const Users = require('../models/users.model');
+const Products = require('../models/product.model');
+const Users = require('../models/user.model');
 
 class ProductsServices {
   static async getAll(offset, limit) {

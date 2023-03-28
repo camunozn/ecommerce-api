@@ -1,6 +1,6 @@
 const CartServices = require('../services/cart.services');
 const OrderServices = require('../services/order.services');
-const ProductsServices = require('../services/products.services');
+const ProductsServices = require('../services/product.services');
 const transporter = require('../utils/mailer');
 
 const createOrder = async (req, res, next) => {

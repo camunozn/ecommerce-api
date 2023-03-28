@@ -1,14 +1,13 @@
 const express = require('express');
-const cors = require('cors');
 const morgan = require('morgan');
-const initModels = require('./models/initModels');
+const cors = require('cors');
 const db = require('./utils/database');
-const userRoutes = require('./routes/users.routes');
-const authRoutes = require('./routes/auth.routes');
+const userRoutes = require('./routes/user.routes');
 const cartRoutes = require('./routes/cart.routes');
 const orderRoutes = require('./routes/order.routes');
-const productsRoutes = require('./routes/products.routes');
+const productRoutes = require('./routes/product.routes');
 const errorHandlerRouter = require('./routes/errorHandler.routes');
+const initModels = require('./models/initModels');
 
 initModels();
 
@@ -30,11 +29,10 @@ db.sync()
   .then(() => console.log('DB synchronized'))
   .catch(error => console.log(error));
 
-app.use(userRoutes);
-app.use(authRoutes);
-app.use(cartRoutes);
-app.use(productsRoutes);
-app.use(orderRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/cart', cartRoutes);
 
 errorHandlerRouter(app);
 

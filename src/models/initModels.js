@@ -1,14 +1,14 @@
-const Users = require('./user.models');
-const Products = require('./product.models');
-const ProductInOrder = require('./productInOrder.models');
-const ProductInCart = require('./productInCart.models');
-const Order = require('./order.models');
-const Cart = require('./cart.models');
+const Cart = require('./cart.model');
+const Orders = require('./order.model');
+const Products = require('./product.model');
+const ProductInCart = require('./productInCart.model');
+const ProductInOrder = require('./productInOrder.model');
+const Users = require('./user.model');
 
 const initModels = () => {
   // users - orders
-  Users.hasMany(Order, { foreignKey: 'user_id' });
-  Order.belongsTo(Users, { foreignKey: 'user_id' });
+  Users.hasMany(Orders, { foreignKey: 'user_id' });
+  Orders.belongsTo(Users, { foreignKey: 'user_id' });
 
   //Users - cart
   Users.hasOne(Cart, { foreignKey: 'user_id' });
@@ -31,8 +31,8 @@ const initModels = () => {
   ProductInCart.belongsTo(Cart, { foreignKey: 'cart_id' });
 
   //Order - products_order
-  Order.hasMany(ProductInOrder, { foreignKey: 'order_id' });
-  ProductInOrder.belongsTo(Order, { foreignKey: 'order_id' });
+  Orders.hasMany(ProductInOrder, { foreignKey: 'order_id' });
+  ProductInOrder.belongsTo(Orders, { foreignKey: 'order_id' });
 };
 
 module.exports = initModels;

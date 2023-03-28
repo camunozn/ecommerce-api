@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 
 class AuthServices {
-  static genToken(payload) {
+  static signToken(payload) {
     try {
-      const token = jwt.sign(payload, process.env.JWT_CONFIG_SECRET, {
-        algorithm: process.env.JWT_CONFIG_ALGORITHM,
-        expiresIn: process.env.JWT_CONFIG_EXPIRESIN,
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        algorithm: process.env.JWT_ALGORITHM,
+        expiresIn: process.env.JWT_EXPIRES_IN,
       });
       return token;
     } catch (error) {

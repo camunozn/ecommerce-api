@@ -1,6 +1,6 @@
 const Cart = require('../models/cart.model');
 const ProductInCart = require('../models/productInCart.model');
-const Products = require('../models/products.model');
+const Products = require('../models/product.model');
 
 class CartServices {
   static async add(data) {

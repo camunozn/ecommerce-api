@@ -1,46 +1,31 @@
-const AuthServices = require('../services/auth.services');
-const UsersServices = require('../services/user.services');
+const UserServices = require('../services/user.services');
 const transporter = require('../utils/mailer');
 
-const createUser = async (req, res, next) => {
+exports.getAllUsers = async (req, res, next) => {
   try {
-    const newUser = req.body;
-    console.log(newUser);
-    const user = await UsersServices.create(newUser);
-    if (user) {
-      await transporter.sendMail({
-        from: process.env.MAILER_CONFIG_USER,
-        to: user.email,
-        subject: 'Bienvenido a MarketPlace.com',
-        html: `
-          <p>Hola ${user.username} Bienvenido al MarketPlace.com, donde podras vender y comprar sin comisiones</p>
-          <p>Es hora de que comiences a cargar tus productos y ver lo facil que es</p>`,
-      });
-    }
-
-    res.status(201).json({
-      success: true,
+    const users = await UserServices.getAll();
+    res.status(200).json({
+      status: 'success',
+      data: {
+        users,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
 
-const updateUser = async (req, res, next) => {
+exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    await UsersServices.update(id, req.body);
-
+    const updatedUser = await UserServices.update(id, req.body);
     res.status(201).json({
-      success: true,
+      status: 'success',
+      data: {
+        user: updatedUser,
+      },
     });
   } catch (error) {
     next(error);
   }
-};
-
-module.exports = {
-  createUser,
-  updateUser,
 };

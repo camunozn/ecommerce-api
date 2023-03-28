@@ -1,4 +1,4 @@
-const ProductsServices = require('../services/products.services');
+const ProductsServices = require('../services/product.services');
 
 const getAllProducts = async (req, res, next) => {
   const url = 'localhost:8000/api/v1/products';
