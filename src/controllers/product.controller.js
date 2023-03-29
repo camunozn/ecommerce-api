@@ -30,7 +30,13 @@ exports.getAllProducts = async (req, res, next) => {
       products: rows,
     };
 
-    res.json(limit && offset ? response : response.products);
+    const result = limit && offset ? response : response.products;
+    res.json({
+      status: 'success',
+      data: {
+        products: result,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -42,8 +48,8 @@ exports.createProduct = async (req, res, next) => {
     if (id !== req.body.user_id) {
       return next({
         status: 401,
-        message: 'Unauthorized',
-        errorName: 'user not logged in',
+        message: 'User not logged in',
+        errorName: 'Unauthorized',
       });
     }
     const product = await ProductServices.createOne(req.body);
@@ -63,7 +69,7 @@ exports.updateProduct = async (req, res, next) => {
     const { id } = req.params;
     const { user_id } = await ProductServices.getOne(id);
 
-    if (user_id != req.user.id) {
+    if (user_id !== req.user.id) {
       return next({
         status: 401,
         message: 'User not logged in.',

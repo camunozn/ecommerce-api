@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const UserServices = require('../services/user.services');
+const CartServices = require('../services/cart.services');
 const AuthServices = require('../services/auth.services');
 
 exports.signUp = async (req, res, next) => {
@@ -11,6 +12,7 @@ exports.signUp = async (req, res, next) => {
       password: req.body.password,
     };
     const user = await UserServices.createOne(newUser);
+    const cart = await CartServices.createCart(user.id);
     // incluir envío de mail de confirmación
 
     const { id, username, email } = user;
@@ -21,6 +23,7 @@ exports.signUp = async (req, res, next) => {
       token,
       data: {
         user,
+        cart,
       },
     });
   } catch (error) {

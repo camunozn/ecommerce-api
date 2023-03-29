@@ -1,56 +1,14 @@
 const Cart = require('../models/cart.model');
-const ProductInCart = require('../models/productInCart.model');
+const ProductsInCart = require('../models/productInCart.model');
 const Products = require('../models/product.model');
 
 class CartServices {
-  static async add(data) {
+  static async createCart(user_id) {
     try {
+      const data = {
+        user_id,
+      };
       return await Cart.create(data);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async getByUser(user_id) {
-    try {
-      return await Cart.findOne({ where: { user_id } });
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async getProductInCart(cart_id, product_id) {
-    return await ProductInCart.findOne({
-      where: {
-        cart_id,
-        product_id,
-      },
-    });
-  }
-
-  static async addProduct(data) {
-    try {
-      return await ProductInCart.create(data);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async updateCart(id, total) {
-    try {
-      return await Cart.update(total, {
-        where: { id },
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async updateProductInCart(id, data) {
-    try {
-      return ProductInCart.update(data, {
-        where: { id },
-      });
     } catch (error) {
       throw error;
     }
@@ -58,19 +16,26 @@ class CartServices {
 
   static async getCartByUser(user_id) {
     try {
+      return await Cart.findOne({ where: { user_id } });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getCartProducts(user_id) {
+    try {
       return await Cart.findOne({
         where: { user_id },
-        attributes: {
-          exclude: ['user_id'],
-        },
         include: {
           model: ProductInCart,
           attributes: {
-            exclude: ['cart_id', 'id'],
+            exclude: ['id', 'cart_id'],
           },
           include: {
             model: Products,
-            attributes: ['name'],
+            attributes: {
+              include: ['name'],
+            },
           },
         },
       });
@@ -79,10 +44,31 @@ class CartServices {
     }
   }
 
-  static async deleteCart(user_id) {
+  static async addCartProduct(cart_id, data) {
     try {
-      return await Cart.destroy({
-        where: { user_id },
+      const { product_id, quantity, price, status } = data;
+      return await ProductsInCart.findOrCreate({
+        where: {
+          cart_id,
+          product_id,
+        },
+        defaults: {
+          cart_id,
+          product_id,
+          quantity,
+          price,
+          status,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async updateCartProduct(id, data) {
+    try {
+      return await ProductsInCart.update(data, {
+        where: { id },
       });
     } catch (error) {
       throw error;

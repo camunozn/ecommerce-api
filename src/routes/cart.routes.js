@@ -1,17 +1,13 @@
 const { Router } = require('express');
-const { addToCart, getCart } = require('../controllers/cart.controller');
-const { addToCartValidator } = require('../validators/cart.validators');
+const cartController = require('../controllers/cart.controller');
 const authController = require('../controllers/auth.controller');
 
 const router = Router();
 
-router.post(
-  '/api/v1/cart',
-  addToCartValidator,
-  authController.protect,
-  addToCart
-);
+router.route('/').get(authController.protect, cartController.getCart);
 
-router.get('/api/v1/cart', authController.protect, getCart);
+router
+  .route('/:id')
+  .post(authController.protect, cartController.addProductToCart);
 
 module.exports = router;

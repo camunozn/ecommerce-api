@@ -19,8 +19,12 @@ const ProductInCart = db.define('product_cart', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  sub_total: {
+  price: {
     type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.ENUM('InStock', 'OutStock'),
     allowNull: false,
   },
 });
