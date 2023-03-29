@@ -22,7 +22,13 @@ const Products = db.define('product', {
   },
   stock: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     defaultValue: 1,
+  },
+  status: {
+    type: DataTypes.ENUM('InStock', 'OutOfStock'),
+    allowNull: false,
+    defaultValue: 'InStock',
   },
   user_id: {
     type: DataTypes.INTEGER,

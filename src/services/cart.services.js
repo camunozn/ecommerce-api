@@ -1,6 +1,7 @@
+const e = require('express');
 const Cart = require('../models/cart.model');
-const ProductsInCart = require('../models/productInCart.model');
 const Products = require('../models/product.model');
+const ProductsInCart = require('../models/productInCart.model');
 
 class CartServices {
   static async createCart(user_id) {
@@ -14,39 +15,12 @@ class CartServices {
     }
   }
 
-  static async getCartByUser(user_id) {
-    try {
-      return await Cart.findOne({ where: { user_id } });
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async getCartProducts(user_id) {
-    try {
-      return await Cart.findOne({
-        where: { user_id },
-        include: {
-          model: ProductInCart,
-          attributes: {
-            exclude: ['id', 'cart_id'],
-          },
-          include: {
-            model: Products,
-            attributes: {
-              include: ['name'],
-            },
-          },
-        },
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
-
   static async addCartProduct(cart_id, data) {
     try {
-      const { product_id, quantity, price, status } = data;
+      const { product_id, quantity } = data;
+      const { price, status } = await Products.findOne({
+        where: { id: product_id },
+      });
       return await ProductsInCart.findOrCreate({
         where: {
           cart_id,
@@ -69,6 +43,39 @@ class CartServices {
     try {
       return await ProductsInCart.update(data, {
         where: { id },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async updateCartTotal(cart_id) {
+    try {
+      //Get the products in cart and calculate total amount
+      const products = await ProductsInCart.findAll({
+        where: { cart_id },
+      });
+      let cartTotal = 0;
+      products.map(product => {
+        cartTotal += product.quantity * product.price;
+      });
+      //Update total amount in cart
+      return await Cart.update(
+        { total_amount: cartTotal },
+        { where: { id: cart_id } }
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getCartWithProducts(user_id) {
+    try {
+      return await Cart.findOne({
+        where: { user_id },
+        include: {
+          model: ProductsInCart,
+        },
       });
     } catch (error) {
       throw error;

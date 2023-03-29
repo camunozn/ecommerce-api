@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../utils/database');
 
-const ProductInOrder = db.define('product_order', {
+const ProductInOrder = db.define('order_products', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -19,7 +19,7 @@ const ProductInOrder = db.define('product_order', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  sub_total: {
+  price: {
     type: DataTypes.FLOAT,
     allowNull: false,
   },

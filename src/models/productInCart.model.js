@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../utils/database');
 
-const ProductInCart = db.define('product_cart', {
+const ProductInCart = db.define('cart_products', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -24,7 +24,7 @@ const ProductInCart = db.define('product_cart', {
     allowNull: false,
   },
   status: {
-    type: DataTypes.ENUM('InStock', 'OutStock'),
+    type: DataTypes.ENUM('InStock', 'OutOfStock'),
     allowNull: false,
   },
 });

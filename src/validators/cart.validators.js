@@ -1,26 +1,22 @@
 const { check, param } = require('express-validator');
 const validateResult = require('../utils/validate');
 
-const addToCartValidator = [
-  check('product_id', 'Error con el campo product_id')
+exports.addProductToCart = [
+  check('product_id', 'Error with product_id field')
     .exists()
-    .withMessage("Debe existir la propiedad 'product_id'")
+    .withMessage('Property product_id must exist')
     .notEmpty()
-    .withMessage('El campo product_id no debe estar vacio')
+    .withMessage('Property product_id cannot be empty')
     .isInt()
-    .withMessage('El campo product_id debe ser un numero entero'),
-  check('quantity', 'error con el campor quantity')
+    .withMessage('Property product_id must be an integer'),
+  check('quantity', 'Error with quantity field')
     .exists()
-    .withMessage("Debe existir la propiedad 'quantity'")
+    .withMessage('Property quantity must exist')
     .notEmpty()
-    .withMessage('El campo quantity no debe estar vacio')
+    .withMessage('Property quantity cannot be empty')
     .isInt()
-    .withMessage('El campo quantity debe ser un numero entero'),
+    .withMessage('Property quantity must be an integer'),
   (req, res, next) => {
     validateResult(req, res, next);
   },
 ];
-
-module.exports = {
-  addToCartValidator,
-};
