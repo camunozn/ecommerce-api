@@ -1,8 +1,8 @@
 const CartServices = require('../services/cart.services');
 
 exports.getUserCart = async (req, res, next) => {
-  const { id: user_id } = req.user;
   try {
+    const { id: user_id } = req.user;
     const cart = await CartServices.getCartWithProducts(user_id);
     res.json({
       status: 'success',
@@ -18,7 +18,8 @@ exports.getUserCart = async (req, res, next) => {
 exports.addProductToCart = async (req, res, next) => {
   try {
     const data = req.body;
-    const cart_id = req.params.id;
+    const { id: user_id } = req.user;
+    const { id: cart_id } = await CartServices.getCart(user_id);
     const [cartProduct, created] = await CartServices.addCartProduct(
       cart_id,
       data

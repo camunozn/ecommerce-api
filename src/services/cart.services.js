@@ -1,4 +1,3 @@
-const e = require('express');
 const Cart = require('../models/cart.model');
 const Products = require('../models/product.model');
 const ProductsInCart = require('../models/productInCart.model');
@@ -15,8 +14,32 @@ class CartServices {
     }
   }
 
+  static async getCart(user_id) {
+    try {
+      return await Cart.findOne({
+        where: { user_id },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getCartWithProducts(user_id) {
+    try {
+      return await Cart.findOne({
+        where: { user_id },
+        include: {
+          model: ProductsInCart,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async addCartProduct(cart_id, data) {
     try {
+      //FIX move logic to controller, only pass clean data
       const { product_id, quantity } = data;
       const { price, status } = await Products.findOne({
         where: { id: product_id },
@@ -51,6 +74,8 @@ class CartServices {
 
   static async updateCartTotal(cart_id) {
     try {
+      //FIX move logic to controller, only pass clean data
+      //TODO rename to updateCart and move to top
       //Get the products in cart and calculate total amount
       const products = await ProductsInCart.findAll({
         where: { cart_id },
@@ -64,19 +89,6 @@ class CartServices {
         { total_amount: cartTotal },
         { where: { id: cart_id } }
       );
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async getCartWithProducts(user_id) {
-    try {
-      return await Cart.findOne({
-        where: { user_id },
-        include: {
-          model: ProductsInCart,
-        },
-      });
     } catch (error) {
       throw error;
     }

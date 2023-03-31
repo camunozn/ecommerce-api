@@ -11,13 +11,9 @@ const Order = db.define('order', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  total: {
+  total_amount: {
     type: DataTypes.FLOAT,
     allowNull: false,
-  },
-  is_completed: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
   },
 });
 

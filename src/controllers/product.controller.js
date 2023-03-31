@@ -1,8 +1,8 @@
 const ProductServices = require('../services/product.services');
 
 exports.getAllProducts = async (req, res, next) => {
-  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   try {
+    const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     const { offset, limit } = req.query;
 
     const products = await ProductServices.getAll(offset, limit);

@@ -9,7 +9,8 @@ const router = Router();
 router.post('/signup', authValidator.singUp, authController.signUp);
 router.post('/login', authValidator.login, authController.login);
 
-router.put('/:id', userController.updateUser);
+router.put('/:id', authController.protect, userController.updateUser);
+
 router.get('/', userController.getAllUsers);
 
 module.exports = router;

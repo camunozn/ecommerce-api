@@ -8,13 +8,14 @@ const router = Router();
 router.route('/').get(authController.protect, cartController.getUserCart);
 
 router
-  .route('/:id')
+  .route('/product')
   .post(
     cartValidator.addProductToCart,
     authController.protect,
     cartController.addProductToCart
   );
 
-//TODO add a delete product from cart endpoint
+//TODO add update product from cart endpoint
+//TODO add delete product from cart endpoint
 
 module.exports = router;
