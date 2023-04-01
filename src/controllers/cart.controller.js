@@ -1,9 +1,21 @@
 const CartServices = require('../services/cart.services');
+const ProductsServices = require('../services/product.services');
+
+const updateCartTotal = async userId => {
+  let cartTotal = 0;
+  const cart = await CartServices.getCartWithProducts(userId);
+  const products = cart.cart_products;
+  products.map(product => {
+    cartTotal += product.quantity * product.price;
+  });
+
+  return cartTotal;
+};
 
 exports.getUserCart = async (req, res, next) => {
   try {
-    const { id: user_id } = req.user;
-    const cart = await CartServices.getCartWithProducts(user_id);
+    const { id: userId } = req.user;
+    const cart = await CartServices.getCartWithProducts(userId);
     res.json({
       status: 'success',
       data: {
@@ -17,16 +29,25 @@ exports.getUserCart = async (req, res, next) => {
 
 exports.addProductToCart = async (req, res, next) => {
   try {
-    const data = req.body;
-    const { id: user_id } = req.user;
-    const { id: cart_id } = await CartServices.getCart(user_id);
-    const [cartProduct, created] = await CartServices.addCartProduct(
-      cart_id,
-      data
-    );
+    const { id: userId } = req.user;
+    const { id: cartId } = await CartServices.getCart(userId);
+
+    const { product_id: productId, quantity } = req.body;
+    const { price, status } = await ProductsServices.getOne(productId);
+
+    const data = {
+      cartId,
+      productId,
+      quantity,
+      price,
+      status,
+    };
+
+    const [cartProduct, created] = await CartServices.addCartProduct(data);
     if (created) {
       //If product was created, just update cart total
-      await CartServices.updateCartTotal(cart_id);
+      const cartTotal = await updateCartTotal(userId);
+      await CartServices.updateCart(cartId, cartTotal);
       //Send response
       res.status(201).json({
         status: 'success',
@@ -43,7 +64,8 @@ exports.addProductToCart = async (req, res, next) => {
       };
       await CartServices.updateCartProduct(updatedProduct.id, updatedProduct);
       //Update cart total
-      await CartServices.updateCartTotal(cart_id);
+      const cartTotal = await updateCartTotal(userId);
+      await CartServices.updateCart(cartId, cartTotal);
       //Send response
       res.status(200).json({
         status: 'success',

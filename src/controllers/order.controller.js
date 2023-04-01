@@ -4,9 +4,9 @@ const ProductsServices = require('../services/product.services');
 const transporter = require('../utils/mailer');
 
 exports.getUserOrders = async (req, res, next) => {
-  const { id: user_id } = req.user;
   try {
-    const orders = await OrderServices.getOrdersWithProducts(user_id);
+    const { id: userId } = req.user;
+    const orders = await OrderServices.getOrdersWithProducts(userId);
     res.status(200).json({
       status: 'success',
       data: {
@@ -20,21 +20,30 @@ exports.getUserOrders = async (req, res, next) => {
 
 exports.createUserOrder = async (req, res, next) => {
   try {
-    const { id: user_id } = req.user;
+    const { id: userId } = req.user;
     //Get cart data and products
-
-    //Create order with cart data and user_id
-    await OrderServices.createOrder(user_id, order);
+    const {
+      id: cartId,
+      totalAmount,
+      cart_products: products,
+    } = await CartServices.getCartWithProducts(userId);
+    //Create order with cart data and userId
+    const order = {
+      userId,
+      totalAmount,
+    };
+    const { id: orderId } = await OrderServices.createOrder(order);
     //Add cart products to order
-    await OrderServices.addOrderProducts(order_id, products);
+    console.log(orderId, products);
+    await OrderServices.addOrderProducts(orderId, products);
     //Clear cart data and delete products in cart
-
+    await CartServices.emptyCart(cartId);
     //Return order with products
-    const order = await OrderServices.getOrderWithProducts(order_id);
+    const orderWithProducts = await OrderServices.getOrderWithProducts(orderId);
     res.status(201).json({
       status: 'success',
       data: {
-        order,
+        order: orderWithProducts,
       },
     });
   } catch (error) {

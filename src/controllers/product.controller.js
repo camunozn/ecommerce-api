@@ -67,9 +67,9 @@ exports.createProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { user_id } = await ProductServices.getOne(id);
+    const { userId } = await ProductServices.getOne(id);
 
-    if (user_id !== req.user.id) {
+    if (userId !== req.user.id) {
       return next({
         status: 401,
         message: 'User not logged in.',
@@ -77,7 +77,7 @@ exports.updateProduct = async (req, res, next) => {
       });
     }
 
-    const updatedProduct = await ProductServices.updateOne(req.body, id);
+    await ProductServices.updateOne(id, req.body);
     res.status(200).json({
       status: 'success',
       data: null,

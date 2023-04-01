@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const Order = require('../models/order.model');
 const ProductsInOrder = require('../models/productInOrder.model');
 
@@ -15,17 +16,17 @@ class OrderServices {
     }
   }
 
-  static async createOrder(user_id, order) {
+  static async createOrder(order) {
     try {
-      //FIX move logic to controller, only pass clean data
+      return await Order.create(order);
     } catch (error) {
       throw error;
     }
   }
 
-  static async addOrderProducts(order_id, products) {
+  static async addOrderProducts(id, products) {
     try {
-      //FIX move logic to controller, only pass clean data
+      return await ProductsInOrder.bulkCreate(products, { where: { id } });
     } catch (error) {
       throw error;
     }

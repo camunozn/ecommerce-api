@@ -18,6 +18,7 @@ exports.getAllUsers = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
+    //FIX extract only fields that can be updated from req.body
     const updatedUser = await UserServices.updateOne(id, req.body);
     res.status(201).json({
       status: 'success',

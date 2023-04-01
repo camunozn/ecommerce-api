@@ -7,13 +7,15 @@ const Order = db.define('order', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    field: 'user_id',
   },
-  total_amount: {
+  totalAmount: {
     type: DataTypes.FLOAT,
     allowNull: false,
+    field: 'total_amount',
   },
 });
 

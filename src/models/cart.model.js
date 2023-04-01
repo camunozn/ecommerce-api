@@ -7,15 +7,17 @@ const Cart = db.define('cart', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     unique: true,
+    field: 'user_id',
   },
-  total_amount: {
+  totalAmount: {
     type: DataTypes.FLOAT,
     allowNull: false,
     defaultValue: 0,
+    field: 'total_amount',
   },
 });
 

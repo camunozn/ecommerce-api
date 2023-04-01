@@ -7,13 +7,15 @@ const ProductInOrder = db.define('order_products', {
     primaryKey: true,
     autoIncrement: true,
   },
-  product_id: {
+  orderId: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    field: 'order_id',
   },
-  order_id: {
+  productId: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    field: 'product_id',
   },
   quantity: {
     type: DataTypes.INTEGER,

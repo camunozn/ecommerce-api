@@ -30,13 +30,15 @@ const Products = db.define('product', {
     allowNull: false,
     defaultValue: 'InStock',
   },
-  user_id: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    field: 'user_id',
   },
-  product_image: {
+  productImage: {
     type: DataTypes.TEXT,
     allowNull: false,
+    field: 'product_image',
   },
 });
 

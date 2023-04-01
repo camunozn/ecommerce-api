@@ -35,7 +35,7 @@ class ProductsServices {
     }
   }
 
-  static async updateOne(data, id) {
+  static async updateOne(id, data) {
     try {
       return await Products.update(data, {
         where: { id },

@@ -1,12 +1,11 @@
 const Cart = require('../models/cart.model');
-const Products = require('../models/product.model');
 const ProductsInCart = require('../models/productInCart.model');
 
 class CartServices {
-  static async createCart(user_id) {
+  static async createCart(userId) {
     try {
       const data = {
-        user_id,
+        userId,
       };
       return await Cart.create(data);
     } catch (error) {
@@ -14,20 +13,39 @@ class CartServices {
     }
   }
 
-  static async getCart(user_id) {
+  static async getCart(userId) {
     try {
       return await Cart.findOne({
-        where: { user_id },
+        where: { userId },
       });
     } catch (error) {
       throw error;
     }
   }
 
-  static async getCartWithProducts(user_id) {
+  static async updateCart(cartId, cartTotal) {
+    try {
+      return await Cart.update(
+        { totalAmount: cartTotal },
+        { where: { id: cartId } }
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async emptyCart(cartId) {
+    try {
+      return await ProductsInCart.destroy({ where: { cartId } });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getCartWithProducts(userId) {
     try {
       return await Cart.findOne({
-        where: { user_id },
+        where: { userId },
         include: {
           model: ProductsInCart,
         },
@@ -37,21 +55,17 @@ class CartServices {
     }
   }
 
-  static async addCartProduct(cart_id, data) {
+  static async addCartProduct(data) {
     try {
-      //FIX move logic to controller, only pass clean data
-      const { product_id, quantity } = data;
-      const { price, status } = await Products.findOne({
-        where: { id: product_id },
-      });
+      const { cartId, productId, quantity, price, status } = data;
       return await ProductsInCart.findOrCreate({
         where: {
-          cart_id,
-          product_id,
+          cartId,
+          productId,
         },
         defaults: {
-          cart_id,
-          product_id,
+          cartId,
+          productId,
           quantity,
           price,
           status,
@@ -67,28 +81,6 @@ class CartServices {
       return await ProductsInCart.update(data, {
         where: { id },
       });
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async updateCartTotal(cart_id) {
-    try {
-      //FIX move logic to controller, only pass clean data
-      //TODO rename to updateCart and move to top
-      //Get the products in cart and calculate total amount
-      const products = await ProductsInCart.findAll({
-        where: { cart_id },
-      });
-      let cartTotal = 0;
-      products.map(product => {
-        cartTotal += product.quantity * product.price;
-      });
-      //Update total amount in cart
-      return await Cart.update(
-        { total_amount: cartTotal },
-        { where: { id: cart_id } }
-      );
     } catch (error) {
       throw error;
     }
