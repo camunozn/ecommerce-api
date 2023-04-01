@@ -6,7 +6,7 @@ const transporter = require('../utils/mailer');
 exports.getUserOrders = async (req, res, next) => {
   try {
     const { id: userId } = req.user;
-    const orders = await OrderServices.getOrdersWithProducts(userId);
+    const orders = await OrderServices.getAllOrdersWithProducts(userId);
     res.status(200).json({
       status: 'success',
       data: {
@@ -39,7 +39,9 @@ exports.createUserOrder = async (req, res, next) => {
     //Clear cart data and delete products in cart
     await CartServices.emptyCart(cartId);
     //Return order with products
-    const orderWithProducts = await OrderServices.getOrderWithProducts(orderId);
+    const orderWithProducts = await OrderServices.getOneOrderWithProducts(
+      orderId
+    );
     res.status(201).json({
       status: 'success',
       data: {
