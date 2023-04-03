@@ -25,7 +25,7 @@ exports.createUserOrder = async (req, res, next) => {
     const {
       id: cartId,
       totalAmount,
-      cart_products: products,
+      cart_products: cartProducts,
     } = await CartServices.getCartWithProducts(userId);
     //Create order with cart data and userId
     const order = {
@@ -34,10 +34,14 @@ exports.createUserOrder = async (req, res, next) => {
     };
     const { id: orderId } = await OrderServices.createOrder(order);
     //Add cart products to order
-    console.log(orderId, products);
-    await OrderServices.addOrderProducts(orderId, products);
+    const orderProducts = cartProducts.map(product => ({
+      ...product.dataValues,
+      orderId,
+    }));
+    await OrderServices.addOrderProducts(orderId, orderProducts);
     //Clear cart data and delete products in cart
     await CartServices.emptyCart(cartId);
+    await CartServices.updateCart(cartId, 0);
     //Return order with products
     const orderWithProducts = await OrderServices.getOneOrderWithProducts(
       orderId

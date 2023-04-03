@@ -32,7 +32,7 @@ exports.addProductToCart = async (req, res, next) => {
     const { id: userId } = req.user;
     const { id: cartId } = await CartServices.getCart(userId);
 
-    const { product_id: productId, quantity } = req.body;
+    const { productId, quantity } = req.body;
     const { price, status } = await ProductsServices.getOne(productId);
 
     const data = {

@@ -3,10 +3,10 @@ const Order = require('../models/order.model');
 const ProductsInOrder = require('../models/productInOrder.model');
 
 class OrderServices {
-  static async getAllOrdersWithProducts(user_id) {
+  static async getAllOrdersWithProducts(userId) {
     try {
       return await Order.findAll({
-        where: { user_id },
+        where: { userId },
         include: {
           model: ProductsInOrder,
         },

@@ -2,13 +2,13 @@ const { check, param } = require('express-validator');
 const validateResult = require('../utils/validate');
 
 exports.addProductToCart = [
-  check('product_id', 'Error with product_id field')
+  check('productId', 'Error with productId field')
     .exists()
-    .withMessage('Property product_id must exist')
+    .withMessage('Property productId must exist')
     .notEmpty()
-    .withMessage('Property product_id cannot be empty')
+    .withMessage('Property productId cannot be empty')
     .isInt()
-    .withMessage('Property product_id must be an integer'),
+    .withMessage('Property productId must be an integer'),
   check('quantity', 'Error with quantity field')
     .exists()
     .withMessage('Property quantity must exist')

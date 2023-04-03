@@ -45,7 +45,7 @@ exports.getAllProducts = async (req, res, next) => {
 exports.createProduct = async (req, res, next) => {
   try {
     const { id } = req.user;
-    if (id !== req.body.user_id) {
+    if (id !== req.body.userId) {
       return next({
         status: 401,
         message: 'User not logged in',

@@ -34,7 +34,7 @@ exports.createProduct = [
     .withMessage('Property stock cannot be empty')
     .isInt()
     .withMessage('Property stock must be an integer'),
-  check('product_image', 'Error with product image field')
+  check('productImage', 'Error with product image field')
     .exists()
     .withMessage('Property product image should exists')
     .notEmpty()
@@ -69,7 +69,7 @@ exports.updateProduct = [
     .withMessage('Property stock cannot be empty')
     .isInt()
     .withMessage('Property stock must be an integer'),
-  check('product_image', 'Error with product image field')
+  check('productImage', 'Error with product image field')
     .optional()
     .notEmpty()
     .withMessage('Property product image cannot be empty')
