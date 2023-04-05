@@ -1,6 +1,7 @@
 const CartServices = require('../services/cart.services');
 const OrderServices = require('../services/order.services');
 const ProductsServices = require('../services/product.services');
+const Email = require('../utils/mailer');
 const transporter = require('../utils/mailer');
 
 exports.getUserOrders = async (req, res, next) => {
@@ -42,6 +43,9 @@ exports.createUserOrder = async (req, res, next) => {
     //Clear cart data and delete products in cart
     await CartServices.emptyCart(cartId);
     await CartServices.updateCart(cartId, 0);
+    //Send confirmation mail
+    const url = `${req.protocol}://${req.get('host')}/orders`;
+    await new Email(req.user, url).sendOrderConfirmation();
     //Return order with products
     const orderWithProducts = await OrderServices.getOneOrderWithProducts(
       orderId

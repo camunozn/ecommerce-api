@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const UserServices = require('../services/user.services');
 const CartServices = require('../services/cart.services');
 const AuthServices = require('../services/auth.services');
+const Email = require('../utils/mailer');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -13,7 +14,9 @@ exports.signUp = async (req, res, next) => {
     };
     const user = await UserServices.createOne(newUser);
     const cart = await CartServices.createCart(user.id);
-    // incluir envío de mail de confirmación
+
+    const url = `${req.protocol}://${req.get('host')}/me`;
+    await new Email(newUser, url).sendWelcome();
 
     const { id, username, email } = user;
     const token = AuthServices.signToken({ id, username, email });
