@@ -19,6 +19,16 @@ module.exports = class Email {
     this.username = user.username;
     this.url = url;
     this.from = `César Muñoz <${process.env.EMAIL_FROM}>`;
+
+    this.welcome = `
+      <p>Hello ${user.username} welcome to the e-commerce platform!</p>
+      <p>Start buying things right now!</p>
+      `;
+
+    this.purchase = `
+      <p>Hello ${user.username} thank you for your purchase! It was completed successfully</p>
+      <p>You can check your orders in the section 'orders' of your profile.</p>
+    `;
   }
 
   newTransport() {
@@ -50,9 +60,8 @@ module.exports = class Email {
     const mailOptions = {
       from: this.from,
       to: this.to,
-      subject,
-      template,
-      text: htmlToText.convert('html'),
+      subject: subject,
+      html: template,
     };
 
     // 3) Creat a transport and send email
@@ -60,10 +69,10 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send('welcome', 'Welcome to the Ecommerce!');
+    await this.send(this.welcome, 'Welcome to the e-commerce platform!');
   }
 
   async sendOrderConfirmation() {
-    await this.send('orderCompleted', 'Your order was successfully completed');
+    await this.send(this.purchase, 'Your order was completed successfully!');
   }
 };
