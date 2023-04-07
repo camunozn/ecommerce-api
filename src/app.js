@@ -17,7 +17,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-const PORT = 8000;
+const PORT = process.env.PORT;
 
 db.authenticate()
   .then(() => {
