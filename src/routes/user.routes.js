@@ -6,11 +6,10 @@ const userValidator = require('../validators/user.validators');
 
 const router = Router();
 
+router.get('/', userController.getAllUsers);
 router.post('/signup', authValidator.singUp, authController.signUp);
 router.post('/login', authValidator.login, authController.login);
 
 router.put('/:id', authController.protect, userController.updateUser);
-
-router.get('/', userController.getAllUsers);
 
 module.exports = router;

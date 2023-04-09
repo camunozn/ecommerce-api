@@ -1,8 +1,6 @@
 const CartServices = require('../services/cart.services');
 const OrderServices = require('../services/order.services');
-const ProductsServices = require('../services/product.services');
 const Email = require('../utils/mailer');
-const transporter = require('../utils/mailer');
 
 exports.getUserOrders = async (req, res, next) => {
   try {
